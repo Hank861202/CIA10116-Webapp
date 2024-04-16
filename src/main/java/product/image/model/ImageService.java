@@ -1,6 +1,8 @@
 package product.image.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ImageService {
 	private ImageDAO_interface dao;
@@ -9,34 +11,36 @@ public class ImageService {
 		dao = new ImageJDBCDAO();
 	}
 
-	public ImageVO addImage(Integer productId, byte[] image) {
+	public List<ImageVO> addImages(Integer productId, List<byte[]> images) {
+	    if (productId == null) {
+	        throw new IllegalArgumentException("productId 不能為空");
+	    }
 
-		if (productId == null) {
-			throw new IllegalArgumentException("productId 不能為空");
-		}
+	    List<ImageVO> imageVOs = new ArrayList<>();
 
-		ImageVO imageVO = new ImageVO();
+	    for (byte[] image : images) {
+	        ImageVO imageVO = new ImageVO();
+	        imageVO.setProductId(productId);
+	        imageVO.setImage(image);
+	        dao.insert(imageVO);
+	        imageVOs.add(imageVO);
+	    }
 
-		imageVO.setProductId(productId);
-		imageVO.setImage(image);
-		dao.insert(imageVO);
-
-		return imageVO;
+	    return imageVOs;
 	}
 
-	public ImageVO updateImage(Integer imageId, Integer productId, byte[] image) {
 
+	public ImageVO updateImage(Integer imageId, Integer productId, byte[] image) {
 		if (productId == null ) {
 			throw new IllegalArgumentException("productId 不能為空");
 		}
 
 		ImageVO imageVO = new ImageVO();
-		
 		imageVO.setImageId(imageId);
 		imageVO.setProductId(productId);
 		imageVO.setImage(image);
 		dao.update(imageVO);
-
+		
 		return imageVO;
 	}
 
@@ -44,8 +48,12 @@ public class ImageService {
 		dao.delete(imageId);
 	}
 
-	public ImageVO getOneEmp(Integer imageId) {
+	public ImageVO getOneImage(Integer imageId) {
 		return dao.findByPrimaryKey(imageId);
+	}
+	
+	public List<ImageVO> getOneProduct(Integer productId) {
+		return dao.findByProductId(productId);
 	}
 
 	public List<ImageVO> getAll() {

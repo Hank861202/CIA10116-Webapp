@@ -4,9 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ImageJDBCDAO implements ImageDAO_interface {
 	String driver = "com.mysql.cj.jdbc.Driver";
@@ -17,6 +18,7 @@ public class ImageJDBCDAO implements ImageDAO_interface {
 	private static final String INSERT_STMT = "INSERT INTO general_product_image (product_id,image) VALUES (?, ?)";
 	private static final String GET_ALL_STMT = "SELECT image_id,product_id,image FROM general_product_image order by image_id";
 	private static final String GET_ONE_STMT = "SELECT image_id,product_id,image FROM general_product_image where image_id = ?";
+	private static final String GET_PRODUCT_STMT = "SELECT image_id,product_id,image FROM general_product_image where product_id = ?";
 	private static final String DELETE = "DELETE FROM general_product_image where image_id = ?";
 	private static final String UPDATE = "UPDATE general_product_image set product_id=?, image=? where image_id = ?";
 
@@ -73,7 +75,7 @@ public class ImageJDBCDAO implements ImageDAO_interface {
 	}
 
 	@Override
-	public ImageVO findByPrimaryKey(Integer imageId) {
+	public ImageVO findByPrimaryKey(Integer ImageId) {
 
 		ImageVO imageVO = null;
 		try {
@@ -81,7 +83,7 @@ public class ImageJDBCDAO implements ImageDAO_interface {
 			try (Connection con = DriverManager.getConnection(url, userid, passwd);
 					PreparedStatement ps = con.prepareStatement(GET_ONE_STMT)) {
 
-				ps.setInt(1, imageId);
+				ps.setInt(1, ImageId);
 
 				try (ResultSet rs = ps.executeQuery()) {
 
@@ -98,6 +100,35 @@ public class ImageJDBCDAO implements ImageDAO_interface {
 			throw new RuntimeException("A database error occured. " + e.getMessage());
 		}
 		return imageVO;
+	}
+	
+	@Override
+	public List<ImageVO> findByProductId(Integer productId) {
+		List<ImageVO> list = new ArrayList<ImageVO>();
+		ImageVO imageVO = null;
+		try {
+			Class.forName(driver);
+			try (Connection con = DriverManager.getConnection(url, userid, passwd);
+					PreparedStatement ps = con.prepareStatement(GET_PRODUCT_STMT)) {
+
+				ps.setInt(1, productId);
+
+				try (ResultSet rs = ps.executeQuery()) {
+					
+					while (rs.next()) {
+						imageVO = new ImageVO();
+						imageVO.setImageId(rs.getInt("image_id"));
+						imageVO.setProductId(rs.getInt("product_id"));
+						imageVO.setImage(rs.getBytes("image"));
+
+						list.add(imageVO);
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("A database error occured. " + e.getMessage());
+		}
+		return list;
 	}
 
 	@Override
@@ -125,5 +156,4 @@ public class ImageJDBCDAO implements ImageDAO_interface {
 		}
 		return list;
 	}
-
 }

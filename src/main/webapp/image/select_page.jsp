@@ -1,9 +1,22 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="java.util.*,java.io.*"%>
+<%@ page import="product.image.model.*"%>
+
+<%
+ImageService imageSvc = new ImageService();
+List<ImageVO> list = imageSvc.getAll();
+Set<Integer> set = new TreeSet<Integer>();
+for(ImageVO product : list){
+	set.add(product.getProductId());
+}
+pageContext.setAttribute("set", set);
+pageContext.setAttribute("list", list);
+%>
 
 <html>
 <head>
-<title>IBM Image: Home</title>
+<title>Image: Home</title>
 
 <style>
   table#table-1 {
@@ -30,7 +43,7 @@
 <body bgcolor='white'>
 
 <table id="table-1">
-   <tr><td><h3>IBM Image: Home</h3><h4>( MVC )</h4></td></tr>
+   <tr><td><h3>Image: Home</h3><h4>( MVC )</h4></td></tr>
 </table>
 
 <h3>資料查詢:</h3>
@@ -48,7 +61,6 @@
 <ul>
   <li><a href='listAllImage.jsp'>List</a> all Images.  <br><br></li>
   
-  
   <li>
     <FORM METHOD="post" ACTION="ImageServlet" >
         <b>輸入圖片編號:</b>
@@ -58,13 +70,11 @@
     </FORM>
   </li>
 
-  <jsp:useBean id="imageSvc" scope="page" class="product.image.model.ImageService" />
-   
   <li>
      <FORM METHOD="post" ACTION="ImageServlet" >
        <b>選擇圖片編號:</b>
        <select size="1" name="imageId">
-         <c:forEach var="imageVO" items="${imageSvc.all}" > 
+         <c:forEach var="imageVO" items="${list}" > 
           <option value="${imageVO.imageId}">${imageVO.imageId}
          </c:forEach>   
        </select>
@@ -76,12 +86,12 @@
   <li>
      <FORM METHOD="post" ACTION="ImageServlet" >
        <b>商品編號:</b>
-       <select size="1" name="imageId">
-         <c:forEach var="imageVO" items="${imageSvc.all}" > 
-          <option value="${imageVO.imageId}">${imageVO.productId}
+       <select size="1" name="productId">
+         <c:forEach var="productId" items="${set}" > 
+          <option value="${productId}">${productId}
          </c:forEach>   
        </select>
-       <input type="hidden" name="action" value="getOne_For_Display">
+       <input type="hidden" name="action" value="getOneP_For_Display">
        <input type="submit" value="送出">
      </FORM>
   </li>

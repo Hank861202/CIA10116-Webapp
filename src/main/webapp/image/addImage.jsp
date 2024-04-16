@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@
+taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="product.image.model.*"%>
-
 <%
 ImageVO imageVO = (ImageVO) request.getAttribute("imageVO");
 %>
@@ -13,7 +13,7 @@ ImageVO imageVO = (ImageVO) request.getAttribute("imageVO");
 
 <style>
 table#table-1 {
-	background-color: #CCCCFF;
+	background-color: #ccccff;
 	border: 2px solid black;
 	text-align: center;
 }
@@ -39,17 +39,15 @@ table {
 }
 
 table, th, td {
-	border: 0px solid #CCCCFF;
+	border: 0px solid #ccccff;
 }
 
 th, td {
 	padding: 1px;
 }
 </style>
-
 </head>
-<body bgcolor='white'>
-
+<body bgcolor="white">
 	<table id="table-1">
 		<tr>
 			<td>
@@ -75,22 +73,49 @@ th, td {
 		</ul>
 	</c:if>
 
-
-	<FORM METHOD="post" ACTION="ImageServlet" name="form1" enctype="multipart/form-data">
-		<table>
-			<tr>
-				<td>商品編號:</td>
-				<td><input type="TEXT" name="productId" size="45" /></td>
-			</tr>
-			<tr>
-				<td>圖片:</td>
-				<td><input type="file" name="imageFile" /></td>
-			</tr>
+	<form method="post" action="ImageServlet" name="form1"
+		enctype="multipart/form-data">
+		<table id="tb">
+		       <tbody>
+          <tr>
+            <td>商品編號:</td>
+            <td><input type="TEXT" name="productId" size="45" /></td>
+          </tr>
+        </tbody>
+        <tbody>
+          <tr>
+            <td>圖片:</td>
+            <td><input type="file" name="imageFile1" /></td>
+            <td><button type="button" class="btn_delete">移除</button></td>
+          </tr>
+        </tbody>
 		</table>
-		<br>
-		 <input type="hidden" name="action" value="insert"> 
-		 <input type="submit" value="送出">
-	</FORM>
+		<br /> <input type="hidden" name="action" value="insert" /> <input
+			type="button" value="新增圖片欄位" id="add" /> <input type="submit"
+			value="送出" />
+	</form>
+	<script>
+      let add_btn = document.querySelector("#add");
+      let tb_ele = document.querySelector("#tb");
+      add_btn.addEventListener("click", () => {
+        let list_html = ` 
+       	<tbody>
+        <tr> 
+            <td>圖片:</td>
+            <td><input type="file" name="imageFile1" /></td>
+            <td><button type="button" class="btn_delete">移除</button></td>
+        </tr></tbody>`;
+        tb_ele.insertAdjacentHTML("beforeend", list_html);
+      });
+      document.addEventListener("click", function (e) {
+    	  console.log(e.target);
+          if (e.target.classList.contains("btn_delete")) {
+            let r = confirm("確認移除？");
+            if (r) {
+              e.target.closest("tbody").remove();
+            }
+          }
+        });
+    </script>
 </body>
-
 </html>

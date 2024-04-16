@@ -3,13 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.util.*"%>
 
-<%
-ImageVO imageVO = (ImageVO) request.getAttribute("imageVO");
-%>
-
 <html>
 <head>
-<title>資料 - listOneImage.jsp</title>
+<title>資料 - listOneProduct.jsp</title>
 
 <style>
 table#table-1 {
@@ -54,7 +50,7 @@ th, td {
 	<table id="table-1">
 		<tr>
 			<td>
-				<h3>資料 - listOneImage.jsp</h3>
+				<h3>資料 - listOneProduct.jsp</h3>
 				<h4>
 					<a href="select_page.jsp">回首頁</a>
 				</h4>
@@ -68,17 +64,21 @@ th, td {
 			<th>商品編號</th>
 			<th>圖片</th>
 		</tr>
+		<c:forEach var="imageVO" items="${imageVOs}">
 		<tr>
 			<td>${imageVO.imageId}</td>
 			<td>${imageVO.productId}</td>
 			<c:if test="${not empty imageVO.image}">
-				<c:set var="base64Image" value="${Base64.getEncoder().encodeToString(imageVO.image)}" />
-				<td><img src="data:image/jpeg;base64,${base64Image}" alt="Image"></td>
+				<c:set var="base64Image"
+					value="${Base64.getEncoder().encodeToString(imageVO.image)}" />
+				<td><img src="data:image/jpeg;base64,${base64Image}"
+					alt="Image"></td>
 			</c:if>
 			<c:if test="${empty imageVO.image}">
 				<td></td>
 			</c:if>
 		</tr>
+		</c:forEach>
 	</table>
 
 </body>

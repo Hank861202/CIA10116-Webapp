@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="java.util.*,java.io.*"%>
+<%@ page import="java.util.*"%>
 <%@ page import="product.image.model.*"%>
 
 <%
@@ -83,6 +83,9 @@ th, td {
 				<c:if test="${not empty imageVO.image}">
 					<c:set var="base64Image" value="${Base64.getEncoder().encodeToString(imageVO.image)}" />
 					<td><img src="data:image/jpeg;base64,${base64Image}" alt="Image"></td>
+				</c:if>
+				<c:if test="${empty imageVO.image}">
+					<td></td>
 				</c:if>
 				<td>
 					<FORM METHOD="post"

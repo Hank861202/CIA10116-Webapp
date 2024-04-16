@@ -7,5 +7,6 @@ public interface ImageDAO_interface {
 	public void update(ImageVO imageVO);
 	public void delete(Integer imageId);
 	public ImageVO findByPrimaryKey(Integer imageId);
+	public List<ImageVO> findByProductId(Integer productId);
 	public List<ImageVO> getAll();
 }
